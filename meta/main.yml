@@ -1,8 +1,11 @@
 ---
 galaxy_info:
-  author: Oliver Davies
-  description: Installs and configures oh-my-zsh.
+  author: TechDad
+  description: Installs and configures oh-my-zsh. Forked from Oliver Davies\' similar role. 
+  license: Apache-2.0
   platforms:
     - { name: Ubuntu, versions: all }
     - { name: Debian, versions: all }
+    - { name: EL,     versions: all }
+    - { name: Fedora, versions: all }
   categories: [ 'system' ]
