@@ -2,7 +2,6 @@
 ohmyzsh_copy_zshrc: true
 ohmyzsh_change_shell: false
 ohmyzsh_users: []
-ohmyzsh_path: ~/.oh-my-zsh
 ohmyzsh_theme: gentoo
 ohmyzsh_plugins: []
 ohmyzsh_aliases: []
