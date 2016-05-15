@@ -1,22 +1,22 @@
 ---
-- name: Install zsh (Debian-ish).
+- name: Install zsh (Debian-ish)
   apt: name=zsh state=present
   when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
 
-- name: Install zsh (RHEL-ish).
+- name: Install zsh (RHEL-ish)
   yum: name=zsh state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux" or ansible_distribution == "Fedora"
 
-- name: Sync oh-my-zsh (/opt).
-    synchronize: src=files/oh-my-zsh dest=/opt/oh-my-zsh
+- name: Copy oh-my-zsh (/opt)
+  copy: src=files/oh-my-zsh dest=/opt/oh-my-zsh
 
-- name: Link oh-my-zsh (users).
+- name: Link oh-my-zsh (users)
   become: yes
   become_user: "{{ item }}"
-    file: src=/opt/oh-my-zsh dest=~/.oh-my-zsh state=link
+  file: src=/opt/oh-my-zsh dest=~/.oh-my-zsh state=link
   with_items: ohmyzsh_users
 
-- name: Copy .zshrc to \$HOME.
+- name: Copy .zshrc to \$HOME
   become: yes
   become_user: "{{ item }}"
   template:
@@ -25,7 +25,7 @@
   with_items: ohmyzsh_users
   when: ohmyzsh_copy_zshrc
 
-- name: Change shell to zsh.
+- name: Change shell to zsh
   user:
     name: "{{ item }}"
     shell: /bin/zsh
