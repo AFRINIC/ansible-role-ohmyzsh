@@ -3,6 +3,7 @@ galaxy_info:
   author: TechDad
   description: Installs and configures zsh with oh-my-zsh. Forked from similar role by Oliver Davies. 
   license: Apache-2.0
+  min_ansible_version: 1.9
   platforms:
     - { name: Ubuntu, versions: all }
     - { name: Debian, versions: all }
