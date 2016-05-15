@@ -11,3 +11,4 @@ galaxy_info:
     - { name: CentOS, versions: all }
     - { name: Fedora, versions: all }
   categories: [ 'shell', 'system', 'user', 'zsh' ]
+  dependencies: []
