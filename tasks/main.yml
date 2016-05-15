@@ -1,10 +1,10 @@
 ---
 - name: Install zsh (Debian-ish).
-  apt: name: zsh state=present
+  apt: name=zsh state=present
   when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
 
 - name: Install zsh (RHEL-ish).
-  yum: name: zsh state=present
+  yum: name=zsh state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux" or ansible_distribution == "Fedora"
 
 - name: Sync oh-my-zsh (/opt).
