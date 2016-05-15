@@ -18,4 +18,4 @@ galaxy_info:
     versions:
     - all
   galaxy_tags: [ 'shell', 'system', 'user', 'zsh' ]
-  dependencies: []
+dependencies: []
