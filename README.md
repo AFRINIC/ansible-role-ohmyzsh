@@ -46,6 +46,7 @@ Default: `ohmyzsh_aliases: []`
 ## Example Playbook
 
     - hosts: all
+      gather_facts: True
       roles:
         - { role: oh-my-zsh, ohmyzsh_users: [ zaphod ] }
 
