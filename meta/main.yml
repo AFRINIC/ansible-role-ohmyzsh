@@ -10,5 +10,5 @@ galaxy_info:
     - { name: EL,     versions: all }
     - { name: CentOS, versions: all }
     - { name: Fedora, versions: all }
-  categories: [ 'shell', 'system', 'user', 'zsh' ]
+  galaxy_tags: [ 'shell', 'system', 'user', 'zsh' ]
   dependencies: []
