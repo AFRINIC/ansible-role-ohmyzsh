@@ -1,4 +1,6 @@
 ---
+gather_facts: true
+
 - name: Install zsh (Debian-ish).
   apt: name: zsh state=present
   when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
