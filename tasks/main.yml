@@ -7,14 +7,18 @@
   yum: name=zsh state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux" or ansible_distribution == "Fedora"
 
-- name: Copy oh-my-zsh (/opt)
-  copy: src=files/oh-my-zsh dest=/opt/oh-my-zsh
+- name: Sync oh-my-zsh
+  become: no
+  synchronize: src=files/oh-my-zsh dest=/var/tmp/
+
+- name: Move oh-my-zsh
+  command: mv /var/tmp/oh-my-zsh /opt/
 
 - name: Link oh-my-zsh (users)
   become: yes
   become_user: "{{ item }}"
   file: src=/opt/oh-my-zsh dest=~/.oh-my-zsh state=link
-  with_items: ohmyzsh_users
+  with_items: "{{ohmyzsh_users}}"
 
 - name: Copy .zshrc to \$HOME
   become: yes
@@ -22,13 +26,13 @@
   template:
     src: zshrc.j2
     dest: ~/.zshrc
-  with_items: ohmyzsh_users
+  with_items: "{{ohmyzsh_users}}"
   when: ohmyzsh_copy_zshrc
 
 - name: Change shell to zsh
   user:
     name: "{{ item }}"
     shell: /bin/zsh
-  with_items: ohmyzsh_users
+  with_items: "{{ohmyzsh_users}}"
   when: ohmyzsh_change_shell
 
