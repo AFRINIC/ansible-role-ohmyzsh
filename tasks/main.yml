@@ -12,6 +12,7 @@
   synchronize: src=files/oh-my-zsh dest=/var/tmp/
 
 - name: Move oh-my-zsh (/opt)
+  command: rm -rf /opt/oh-my-zsh
   command: mv /var/tmp/oh-my-zsh /opt/
 
 - name: Link oh-my-zsh (users)
