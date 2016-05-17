@@ -7,17 +7,25 @@
   yum: name=zsh state=present
   when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux" or ansible_distribution == "Fedora"
 
-- name: Sync oh-my-zsh (tmp)
+- name: Sync oh-my-zsh (remote -> local tmp)
   become: no
-  synchronize: src=files/oh-my-zsh dest=/var/tmp/
+  synchronize:
+    src: files/oh-my-zsh
+    dest: /var/tmp/
 
-- name: Move oh-my-zsh (/opt)
-  command: mv -fv /var/tmp/oh-my-zsh /opt/
+- name: Sync oh-my-zsh (local tmp -> local libexec)
+  synchronize:
+    src: /var/tmp/oh-my-zsh
+    dest: /usr/local/libexec/
+  delegate_to: "{{ inventory_hostname }}"
+
+- name: Clean up (local tmp)
+  file: path=/var/tmp/oh-my-zsh state=absent
 
 - name: Link oh-my-zsh (users)
   become: yes
   become_user: "{{ item }}"
-  file: src=/opt/oh-my-zsh dest=~/.oh-my-zsh state=link
+  file: src=/usr/local/libexec/oh-my-zsh dest=~/.oh-my-zsh state=link
   with_items: "{{ ohmyzsh_install_users }}"
 
 - name: Copy .zshrc to $HOME
