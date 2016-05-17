@@ -1,26 +1,28 @@
 ---
-- name: Install zsh (Debian-ish)
-  apt: name=zsh state=present
-  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
-
-- name: Install zsh (RHEL-ish)
-  yum: name=zsh state=present
-  when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux" or ansible_distribution == "Fedora"
+#- name: Install zsh (Debian-ish)
+#  apt: name=zsh state=present
+#  when: ansible_os_family == 'Debian' or ansible_distribution == 'Ubuntu'
+#
+#- name: Install zsh (RHEL-ish)
+#  yum: name=zsh state=present
+#  when: ansible_distribution == "CentOS" or ansible_distribution == "Red Hat Enterprise Linux" or ansible_distribution == "Fedora"
+- name: Install zsh
+  package: name=zsh state=latest
 
 - name: Sync oh-my-zsh (remote -> local tmp)
   become: no
   synchronize:
     src: files/oh-my-zsh
-    dest: /var/tmp/
+    dest: /tmp/
 
 - name: Sync oh-my-zsh (local tmp -> local libexec)
   synchronize:
-    src: /var/tmp/oh-my-zsh
+    src: /tmp/oh-my-zsh
     dest: /usr/local/libexec/
   delegate_to: "{{ inventory_hostname }}"
 
 - name: Clean up (local tmp)
-  file: path=/var/tmp/oh-my-zsh state=absent
+  file: path=/tmp/oh-my-zsh state=absent
 
 - name: Link oh-my-zsh (users)
   become: yes
