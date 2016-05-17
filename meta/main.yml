@@ -17,5 +17,10 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - all
+  - name: FreeBSD
+    versions:
+    - 10.0
+    - 10.1
+    - 10.2
   galaxy_tags: [ 'shell', 'system', 'user', 'zsh' ]
 dependencies: []
