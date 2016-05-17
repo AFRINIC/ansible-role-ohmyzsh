@@ -1,7 +1,9 @@
 ---
 - name: Install zsh
-  package: name=zsh state=latest
-  package: name=rsync state=latest
+  package: name={{ item }} state=present
+  with_items:
+    - rsync
+    - zsh
 
 - name: Sync oh-my-zsh (remote -> local tmp)
   become: no
@@ -32,9 +34,17 @@
     dest: ~/.zshrc
   with_items: "{{ ohmyzsh_install_users }}"
 
-- name: Change default shell to zsh
+- name: Change default shell to zsh (Linux)
   user:
     name: "{{ item }}"
     shell: /bin/zsh
   with_items: "{{ ohmyzsh_shell_users }}"
+  when: ansible_os_family != "FreeBSD"
+
+- name: Change default shell to zsh (FreeBSD)
+  user:
+    name: "{{ item }}"
+    shell: /usr/local/bin/zsh
+  with_items: "{{ ohmyzsh_shell_users }}"
+  when: ansible_os_family == "FreeBSD"
 
