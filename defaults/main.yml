@@ -4,3 +4,4 @@ ohmyzsh_shell_users: []
 ohmyzsh_theme: gentoo
 ohmyzsh_plugins: []
 ohmyzsh_aliases: []
+ohmyzsh_syncmode: local   # set to `local` or `github`

@@ -1,24 +1,23 @@
 ---
-- name: Install zsh
+- name: Install zsh (and other neccessary packages)
   package: name={{ item }} state=present
   with_items:
     - rsync
     - zsh
+    - git
 
-- name: Sync oh-my-zsh (remote -> local tmp)
-  become: no
+- name: Sync oh-my-zsh (ansible host -> local libexec)
   synchronize:
     src: files/oh-my-zsh
-    dest: /tmp/
-
-- name: Sync oh-my-zsh (local tmp -> local libexec)
-  synchronize:
-    src: /tmp/oh-my-zsh
     dest: /usr/local/libexec/
-  delegate_to: "{{ inventory_hostname }}"
+  when: ohmyzsh_syncmode == "local"
 
-- name: Clean up (local tmp)
-  file: path=/tmp/oh-my-zsh state=absent
+- name: Sync oh-my-zsh (github -> local libexec)
+  git:
+    repo: https://github.com/robbyrussell/oh-my-zsh.git
+    dest: /usr/local/libexec/oh-my-zsh
+    update: no
+  when: ohmyzsh_syncmode == "github"
 
 - name: Link oh-my-zsh (users)
   become: yes
@@ -47,4 +46,3 @@
     shell: /usr/local/bin/zsh
   with_items: "{{ ohmyzsh_shell_users }}"
   when: ansible_os_family == "FreeBSD"
-
