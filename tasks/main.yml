@@ -6,23 +6,42 @@
     - zsh
     - git
 
-- name: Sync oh-my-zsh (ansible host -> local libexec)
+- name: Sync oh-my-zsh (ansible host -> local tmp)
   synchronize:
-    src: files/oh-my-zsh
-    dest: /usr/local/libexec/
+    src: "{{ role_path }}/files/oh-my-zsh/"
+    dest: /tmp/.oh-my-zsh-tmp
+    delete: yes
+  become: no
   when: ohmyzsh_syncmode == "local"
 
-- name: Sync oh-my-zsh (github -> local libexec)
+- name: Sync oh-my-zsh (local tmp -> local libexec)
+  synchronize:
+    src: /tmp/.oh-my-zsh-tmp/
+    dest: "{{ ohmyzsh_installdir }}/"
+    delete: yes
+    archive: no
+    owner: no
+    group: no
+    links: yes
+    recursive: yes
+  delegate_to: "{{ inventory_hostname }}"
+  when: ohmyzsh_syncmode == "local"
+
+- name: Clean up (local tmp)
+  file: path=/tmp/.oh-my-zsh-tmp/ state=absent
+  when: ohmyzsh_syncmode == "local"
+
+- name: Clone oh-my-zsh (github -> local libexec)
   git:
     repo: https://github.com/robbyrussell/oh-my-zsh.git
-    dest: /usr/local/libexec/oh-my-zsh
+    dest: "{{ ohmyzsh_installdir }}"
     update: no
   when: ohmyzsh_syncmode == "github"
 
 - name: Link oh-my-zsh (users)
   become: yes
   become_user: "{{ item }}"
-  file: src=/usr/local/libexec/oh-my-zsh dest=~/.oh-my-zsh state=link
+  file: src="{{ ohmyzsh_installdir }}" dest=~/.oh-my-zsh state=link
   with_items: "{{ ohmyzsh_install_users }}"
 
 - name: Copy .zshrc to $HOME

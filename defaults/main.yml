@@ -5,3 +5,5 @@ ohmyzsh_theme: gentoo
 ohmyzsh_plugins: []
 ohmyzsh_aliases: []
 ohmyzsh_syncmode: local   # set to `local` or `github`
+ohmyzsh_installdir: /usr/local/libexec/oh-my-zsh
+
