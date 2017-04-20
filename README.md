@@ -1,7 +1,6 @@
 # Ansible Role: oh-my-zsh
 
-Installs and configures the zsh shell and oh-my-zsh.
-
+Installs and configures the `zsh` shell and [oh-my-zsh](http://ohmyz.sh/).
 
 ## Role Variables
 
@@ -37,13 +36,24 @@ A list of `oh-my-zsh` plugins to enable in `.zshrc`. This is also global for all
 
 Default: `ohmyzsh_plugins: []`
 
+### ohmyzsh\_syncmode
+
+Get `oh-my-zsh` source from either the local copy on the Ansible host, OR from Github.
+
+Default: `ohmyzsh_syncmode: local`
+
+Possible values: `local` | `github`  
+(any other value will break things).
+
 
 ## Example Playbook
 
     - hosts: all
       gather_facts: True
       roles:
-        - { role: oh-my-zsh, ohmyzsh_install_users: [ zaphod ] }
+        - { role: oh-my-zsh, 
+            ohmyzsh_install_users: [ zaphod ]
+          }
 
 
 ## Credits
@@ -55,13 +65,12 @@ Additional changes noted below...
 
 ## Notes
 
-This role has some unique design and implementation goals compared to the one it was forked from and other zsh/oh-my-zsh roles available.
+1. This role has some unique design and implementation goals compared to the one it was forked from and other zsh/oh-my-zsh roles available.
 
-It assumes that the target hosts may have limited direct Internet access and
-also may or may not have the `git` command installed.
+    It assumes that the target hosts may not have direct Internet access or may prefer to get all files internally for some other reason.
 
-As such, it syncs a local copy of the `oh-my-zsh` repository from the role itself to the host. (Rather than from Github).
+    As such, by default it syncs a local copy of the `oh-my-zsh` repository from the role itself to the host. (Rather than from Github).
 
-Of course this means that auto-updating is disabled. This also keeps the same version consistent across all your hosts, and only changes if you change the source in the role. But this may not suit everyone. You have been warned.
+    Alternatively you can toggle to do a git clone instead as normal. 
 
-
+2. To cater for the local sync option, auto-updating is disabled within `oh-my-zsh`. This may not suit everyone. You have been warned.
