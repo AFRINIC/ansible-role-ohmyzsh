@@ -38,6 +38,16 @@
     update: no
   when: ohmyzsh_syncmode == "github"
 
+- name: prepare custom/themes directory
+  file:
+    path: "{{ ohmyzsh_installdir }}/custom/themes"
+    state: directory
+
+- name: Add in customised flazz2 theme
+  copy:
+    dest: "{{ ohmyzsh_installdir }}/custom/themes/flazz2.zsh-theme"
+    src: custom-flazz.zsh-theme
+
 - name: Link oh-my-zsh (users)
   become: yes
   become_user: "{{ item }}"
