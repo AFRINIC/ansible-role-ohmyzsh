@@ -46,7 +46,7 @@
 - name: Add in customised flazz2 theme
   copy:
     dest: "{{ ohmyzsh_installdir }}/custom/themes/flazz2.zsh-theme"
-    src: custom-flazz.zsh-theme
+    src: custom-flazz2.zsh-theme
 
 - name: Link oh-my-zsh (users)
   become: yes
