@@ -6,30 +6,39 @@
     - zsh
     - git
 
-- name: Sync oh-my-zsh (ansible host -> local tmp)
-  synchronize:
-    src: "{{ role_path }}/files/oh-my-zsh/"
-    dest: /tmp/.oh-my-zsh-tmp
-    delete: yes
-  become: no
-  when: ohmyzsh_syncmode == "local"
+- stat: path="{{ ohmyzsh_installdir }}/"
+  register: omz_dir
 
-- name: Sync oh-my-zsh (local tmp -> local libexec)
-  synchronize:
-    src: /tmp/.oh-my-zsh-tmp/
-    dest: "{{ ohmyzsh_installdir }}/"
-    delete: yes
-    archive: no
-    owner: no
-    group: no
-    links: yes
-    recursive: yes
-  delegate_to: "{{ inventory_hostname }}"
-  when: ohmyzsh_syncmode == "local"
+- name: Sync (included) oh-my-zsh to host
+  block:
+    - name: Sync oh-my-zsh (ansible host -> local tmp)
+      synchronize:
+        src: "{{ role_path }}/files/oh-my-zsh/"
+        dest: /tmp/.oh-my-zsh-tmp
+        delete: yes
+        rsync_opts:
+          - "--exclude=custom/themes/flazz2.zsh-theme"
+          - "--delete-after"
+      become: no
 
-- name: Clean up (local tmp)
-  file: path=/tmp/.oh-my-zsh-tmp/ state=absent
-  when: ohmyzsh_syncmode == "local"
+    - name: Sync oh-my-zsh (local tmp -> local libexec)
+      synchronize:
+        src: /tmp/.oh-my-zsh-tmp/
+        dest: "{{ ohmyzsh_installdir }}/"
+        delete: yes
+        archive: no
+        owner: no
+        group: no
+        links: yes
+        recursive: yes
+        rsync_opts:
+          - "--exclude=custom/themes/flazz2.zsh-theme"
+          - "--delete-after"
+      delegate_to: "{{ inventory_hostname }}"
+
+    - name: Clean up (local tmp)
+      file: path=/tmp/.oh-my-zsh-tmp/ state=absent
+  when: ohmyzsh_syncmode == "local" and omz_dir.stat.exists == False
 
 - name: Clone oh-my-zsh (github -> local libexec)
   git:
